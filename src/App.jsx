@@ -5,6 +5,8 @@ import {
   calculateWPH,
   calculateWPS,
   calculateAccuracy,
+  calculateWordStats, // Correct usage
+  calculateAccuracyWords, // Correct usage
 } from "./utils/metrics";
 import PromptDisplay from "./components/PromptDisplay";
 import TypingInput from "./components/TypingInput";
@@ -23,7 +25,7 @@ function App() {
   const [currentTime, setCurrentTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
 
-  // Auto focus input on any click (except when test is finished)
+  // Auto focus input
   useEffect(() => {
     const handleClick = () => {
       if (status !== "finished") {
@@ -43,18 +45,17 @@ function App() {
     setEndTime(null);
   };
 
-  // Initialize words on mount
   useEffect(() => {
     resetTest();
   }, []);
 
-  // Timer logic
+  // Timer
   useEffect(() => {
     let interval;
     if (status === "running") {
       interval = setInterval(() => {
         setCurrentTime(Date.now());
-      }, 100); // Update frequently for smooth timer
+      }, 100);
     }
     return () => clearInterval(interval);
   }, [status]);
@@ -62,16 +63,14 @@ function App() {
   const handleInput = (input) => {
     if (status === "finished") return;
 
-    // Start timer on first input
     if (status === "idle") {
       setStatus("running");
-      setStartTime(Date.now()); // eslint-disable-line
-      setCurrentTime(Date.now()); // eslint-disable-line
+      setStartTime(Date.now());
+      setCurrentTime(Date.now());
     }
 
     setUserInput(input);
 
-    // Check for completion
     const fullText = words.join(" ");
     if (input.length >= fullText.length) {
       finishTest();
@@ -83,14 +82,13 @@ function App() {
     setEndTime(Date.now());
   };
 
-  // Calculate stats
-  // Calculate stats
+  // Time
   const timeNow = status === "finished" ? endTime : currentTime || 0;
   const start = startTime || 0;
   const elapsedSeconds =
     start > 0 && timeNow > 0 ? Math.max(0, (timeNow - start) / 1000) : 0;
 
-  // Count correct chars
+  // Character stats
   const fullText = words.join(" ");
   let correctChars = 0;
   for (let i = 0; i < userInput.length; i++) {
@@ -104,28 +102,23 @@ function App() {
   const wps = calculateWPS(wpm);
   const accuracy = calculateAccuracy(correctChars, userInput.length);
 
-  // Final stats for results screen
+  // Word-based
+  const typedWords = userInput.trim().split(/\s+/);
+  const { correctWords, incorrectWords, totalWords } = calculateWordStats(
+    typedWords,
+    words
+  );
+
+  // Final stats
   const finalStats = {
     wpm,
     wph,
     wps,
-    accuracy,
+    accuracy: calculateAccuracyWords(correctWords, totalWords),
     timeTaken: elapsedSeconds.toFixed(2),
-    correctWords: words.filter((word, idx) => {
-      // Simple word correctness check:
-      // We need to split user input by space and compare?
-      // Or just rely on char correctness.
-      // Requirement says "Correct Words / Incorrect Words".
-      // Let's approximate by splitting userInput by space.
-      const userWords = userInput.split(" ");
-      return userWords[idx] === word;
-    }).length,
-    incorrectWords:
-      40 -
-      words.filter((word, idx) => {
-        const userWords = userInput.split(" ");
-        return userWords[idx] === word;
-      }).length,
+    correctWords,
+    incorrectWords,
+    totalWords,
   };
 
   return (
@@ -133,14 +126,10 @@ function App() {
       {/* Toggle Button */}
       <button
         onClick={toggleTheme}
-        className="absolute top-4 right-4 px-4 py-2 rounded-md 
-                   bg-gray-700 dark:bg-gray-200 
-                   text-white dark:text-gray-800 
-                   transition duration-300 shadow-md"
+        className="absolute top-4 right-4 px-4 py-2 rounded-md bg-gray-700 dark:bg-gray-200 text-white dark:text-gray-800 transition duration-300 shadow-md"
       >
         {theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode"}
       </button>
-      {/* Toggle Button End*/}
 
       <div className="max-w-4xl w-full">
         <header className="mb-8 text-center">
@@ -172,7 +161,7 @@ function App() {
           {status === "running" && (
             <div className="flex items-center justify-center mt-2">
               <button
-                onClick={() => finishTest()}
+                onClick={finishTest}
                 className="px-4 py-2 cursor-pointer rounded-md bg-rose-700 text-white transition duration-300 shadow-md"
               >
                 Stop
@@ -189,9 +178,7 @@ function App() {
           )}
         </div>
 
-        {status === "finished" && (
-          <Results stats={finalStats} onRestart={resetTest} />
-        )}
+        {status === "finished" && <Results stats={finalStats} onRestart={resetTest} />}
 
         <footer className=" text-center text-gray-600 text-sm">
           <p>Press any key to focus. Type the text exactly as shown.</p>
