@@ -103,7 +103,9 @@ function App() {
   const accuracy = calculateAccuracy(correctChars, userInput.length);
 
   // Word-based
-  const typedWords = userInput.trim().split(/\s+/);
+
+  
+  const typedWords = userInput.trim().split(/\s+/).filter(word => word.length > 0);
   const { correctWords, incorrectWords, totalWords } = calculateWordStats(
     typedWords,
     words
