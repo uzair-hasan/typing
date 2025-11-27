@@ -169,8 +169,19 @@ function App() {
             disabled={status === "finished"}
           />
 
+          {status === "running" && (
+            <div className="flex items-center justify-center mt-2">
+              <button
+                onClick={() => finishTest()}
+                className="px-4 py-2 cursor-pointer rounded-md bg-rose-700 text-white transition duration-300 shadow-md"
+              >
+                Stop
+              </button>
+            </div>
+          )}
+
           {status === "idle" && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className=" flex items-center justify-center pointer-events-none">
               <p className="text-xl text-gray-400 animate-pulse bg-gray-900/80 px-4 py-2 rounded-lg">
                 Start typing to begin...
               </p>
@@ -182,7 +193,7 @@ function App() {
           <Results stats={finalStats} onRestart={resetTest} />
         )}
 
-        <footer className="mt-12 text-center text-gray-600 text-sm">
+        <footer className=" text-center text-gray-600 text-sm">
           <p>Press any key to focus. Type the text exactly as shown.</p>
         </footer>
       </div>
