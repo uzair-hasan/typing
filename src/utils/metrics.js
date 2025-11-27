@@ -1,0 +1,20 @@
+export const calculateWPM = (charsTyped, timeInSeconds) => {
+  if (timeInSeconds === 0) return 0;
+  const minutes = timeInSeconds / 60;
+  const wpm = charsTyped / 5 / minutes;
+  return Math.round(wpm);
+};
+
+export const calculateWPH = (wpm) => {
+  return Math.round(wpm * 60);
+};
+
+export const calculateWPS = (wpm) => {
+  return parseFloat((wpm / 60).toFixed(2));
+};
+
+export const calculateAccuracy = (correctChars, totalChars) => {
+  if (totalChars === 0) return 100;
+  const accuracy = (correctChars / totalChars) * 100;
+  return Math.round(accuracy);
+};
