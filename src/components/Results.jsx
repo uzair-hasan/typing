@@ -45,7 +45,7 @@ const Results = ({ stats, onRestart }) => {
 
           {/* words per/sc */}
           <div className="bg-gray-800 p-4 rounded-lg">
-            <p className="text-sm text-gray-400"> WPH:</p>
+            <p className="text-sm text-gray-400"> WPS:</p>
             <p className="text-xl font-bold text-purple-400">{stats.wps}</p>
           </div>
 
