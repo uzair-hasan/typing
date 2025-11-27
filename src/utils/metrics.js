@@ -20,7 +20,6 @@ export const calculateAccuracy = (correctChars, totalChars) => {
 };
 
 
-// Word-based stats (ADD these below your existing functions)
 export const calculateWordStats = (typedWords, promptWords) => {
   let correctWords = 0;
 

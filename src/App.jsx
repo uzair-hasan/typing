@@ -25,7 +25,7 @@ function App() {
   const [currentTime, setCurrentTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
 
-  // Auto focus input
+  // to auto focus input
   useEffect(() => {
     const handleClick = () => {
       if (status !== "finished") {
@@ -122,11 +122,16 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4 font-sans">
+    <div
+      className={`min-h-screen flex flex-col items-center justify-center p-4 font-sans
+  ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}
+    >
       {/* Toggle Button */}
       <button
         onClick={toggleTheme}
-        className="absolute top-4 right-4 px-4 py-2 rounded-md bg-gray-700 dark:bg-gray-200 text-white dark:text-gray-800 transition duration-300 shadow-md"
+        className="absolute top-4 right-4 px-4 py-2 rounded-md shadow-md 
+    transition duration-300 
+    bg-gray-700 text-white dark:bg-gray-200 dark:text-gray-800"
       >
         {theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode"}
       </button>
@@ -178,7 +183,9 @@ function App() {
           )}
         </div>
 
-        {status === "finished" && <Results stats={finalStats} onRestart={resetTest} />}
+        {status === "finished" && (
+          <Results stats={finalStats} onRestart={resetTest} />
+        )}
 
         <footer className=" text-center text-gray-600 text-sm">
           <p>Press any key to focus. Type the text exactly as shown.</p>

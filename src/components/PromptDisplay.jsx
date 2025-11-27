@@ -1,10 +1,7 @@
 import React from 'react';
 
 const PromptDisplay = ({ words, userInput }) => {
-  // Flatten words array into a single string with spaces for easier comparison,
-  // OR keep them as words and map through.
-  // Requirement: "Cursor highlights current word/character".
-  // Let's render word by word.
+
 
   const wordsString = words.join(' ');
   const chars = wordsString.split('');
@@ -12,7 +9,7 @@ const PromptDisplay = ({ words, userInput }) => {
   return (
     <div className='font-mono text-2xl leading-relaxed break-words text-gray-500 bg-gray-800 p-6 rounded-xl shadow-inner min-h-[200px]'>
       {chars.map((char, index) => {
-        let colorClass = 'text-gray-500'; // Default (untyped)
+        let colorClass = 'text-gray-500';
         let bgClass = '';
 
         if (index < userInput.length) {
@@ -24,7 +21,7 @@ const PromptDisplay = ({ words, userInput }) => {
           }
         }
 
-        // Cursor logic: The character at userInput.length is the current one.
+        // for cursor 
         const isCurrent = index === userInput.length;
 
         return (
